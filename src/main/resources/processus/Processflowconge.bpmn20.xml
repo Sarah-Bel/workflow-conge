@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="holidayRequest" name="Holiday Request" isExecutable="true">
+    <startEvent id="startEvent" flowable:formFieldValidation="true"></startEvent>
+    <sequenceFlow id="sequenceFlow-05d38cd3-006f-4f79-9040-ad9891b00f24" sourceRef="startEvent" targetRef="demandeTask"></sequenceFlow>
+    <userTask id="demandeTask" name="Demande Conge" flowable:candidateGroups="managers" flowable:formFieldValidation="true"></userTask>
+    <exclusiveGateway id="decision"></exclusiveGateway>
+    <serviceTask id="DemandeAccept" name="Demande Accepte" flowable:class="org.example.tut.flowable.handler.HolidayApprovalHandler"></serviceTask>
+    <userTask id="holidayApprovedTask" name="Etape de RH" flowable:assignee="${employee}" flowable:formFieldValidation="true">
+      <extensionElements>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="demanderejeteeMail" name="Demande rejete" flowable:class="org.example.tut.flowable.handler.HolidayRejectionHandler"></serviceTask>
+    <endEvent id="rejectEnd"></endEvent>
+    <exclusiveGateway id="decisionRh"></exclusiveGateway>
+    <serviceTask id="CongeOK" name="ok" flowable:class="org.example.tut.flowable.handler.HolidayApprovalHandlerOK"></serviceTask>
+    <serviceTask id="CongeKO" name="KO" flowable:class="org.example.tut.flowable.handler.HolidayRejectionHandlerKO"></serviceTask>
+    <endEvent id="rejectEndKORH"></endEvent>
+    <endEvent id="rejectEndOKRH"></endEvent>
+    <sequenceFlow id="managerOK" sourceRef="decision" targetRef="demanderejeteeMail">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approved}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="managerTOrh" sourceRef="DemandeAccept" targetRef="holidayApprovedTask"></sequenceFlow>
+    <sequenceFlow id="demandedecisionmanager" sourceRef="demandeTask" targetRef="decision"></sequenceFlow>
+    <sequenceFlow id="rhdecision" sourceRef="holidayApprovedTask" targetRef="decisionRh"></sequenceFlow>
+    <sequenceFlow id="sequenceFlow-3c9f3681-5afb-4e33-b6b1-e2ce3c21c2a4" sourceRef="demanderejeteeMail" targetRef="rejectEnd"></sequenceFlow>
+    <sequenceFlow id="finok" sourceRef="CongeOK" targetRef="rejectEndOKRH"></sequenceFlow>
+    <sequenceFlow id="finko" sourceRef="CongeKO" targetRef="rejectEndKORH"></sequenceFlow>
+    <sequenceFlow id="managerKO" sourceRef="decision" targetRef="DemandeAccept">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="RHOK" sourceRef="decisionRh" targetRef="CongeOK">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approvedRH}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="RHKO" sourceRef="decisionRh" targetRef="CongeKO">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approvedRH}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+</definitions>

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,7 @@ import com.workflow.dto.ProcessInstanceResponse;
 import com.workflow.dto.Response;
 import com.workflow.dto.TaskDetails;
 
-@CrossOrigin(origins= {"http://localhost:4200"})
+@CrossOrigin(origins= "*")
 @RestController
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -37,6 +38,11 @@ public class CongeController {
     @Autowired
     private AuthenticationManager authenticationManager;
     
+    @Autowired
+    private CustomUserDetailsService userDetailService;
+
+    
+
     @PostMapping("/authenticate")
     public String generateToken(@RequestBody AuthRequest authRequest) throws Exception {
         try {
@@ -46,7 +52,9 @@ public class CongeController {
         } catch (Exception ex) {
             throw new Exception("inavalid username/password");
         }
-        return jwtUtil.generateToken(authRequest.getUsername());
+        final UserDetails userDetails = userDetailService
+                .loadUserByUsername(authRequest.getUsername());
+        return 		jwtUtil.generateToken(userDetails);
     }
     
     @GetMapping({ "/hello" })

@@ -76,11 +76,10 @@ public class CongeService {
         variables.put("Commentaire", tDemande.getComment());
         variables.put("username", tDemande.getUser().rtid());
         
+        
        ProcessInstance processInstance =
                runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, variables);
-       
     	congeRepository.save(tDemande);
-     
         return new ProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
 
     }

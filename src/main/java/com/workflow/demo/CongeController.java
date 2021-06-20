@@ -2,6 +2,7 @@ package com.workflow.demo;
 
 import java.util.List;
 
+import javax.mail.internet.MimeMessage;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,11 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+
+import javax.mail.internet.MimeMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -124,8 +130,16 @@ public class CongeController {
     }
 
     @PostMapping("/RH/approve/tasks/{taskId}/{approvedRH}")
-    public void approveTaskRH(@PathVariable("taskId") String taskId,@PathVariable("approvedRH") Boolean approvedRH){
+    public void approveTaskRH(@PathVariable("taskId") String taskId,@PathVariable("approvedRH") Boolean approvedRH,String username){
     	congerService.approveHolidayRH(taskId,approvedRH);
+    	
+    	if(approvedRH==true)
+    	{
+    	UserMail(username);
+    	}
+    	else 
+    		System.out.println("conge KO");
+    	
     }
     
     @GetMapping("/Recherche/{valuers}")
@@ -147,8 +161,8 @@ public class CongeController {
     @Autowired
     UserRepository userrepository;
     
-//    @Autowired
-//	private JavaMailSender mailSenderObj;
+    @Autowired
+	private JavaMailSender mailSenderObj;
 
     @RequestMapping(value = { "/Allusers" }, method = RequestMethod.GET)
 	public List<User> viewEmployees(Model model) {
@@ -160,42 +174,40 @@ public class CongeController {
 	}
     
    
- //sendmail code
  	@GetMapping(value = "/sendMail/{id}")
  	public ResponseEntity<User> UserMail(@PathVariable("id") String user_id) {
 
  		User user = userrepository.findById(user_id).get();
 
- 		//rhok.sendmail(user);
+ 		sendmail(user);
 
  		return new ResponseEntity<User>(HttpStatus.OK);
 
  	}
  	
- 	
-// 	private void sendmail(User user) {
-//
-//		final String emailToRecipient = user.getEmp_email();
-//		final String emailSubject = "Succesfully Registration";
-//
-//		final String emailMessage1 =  user.getEmp_email();
-//
-//		mailSenderObj.send(new MimeMessagePreparator() {
-//
-//			@Override
-//			public void prepare(MimeMessage mimeMessage) throws Exception {
-//
-//				MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-//
-//				mimeMsgHelperObj.setTo(emailToRecipient);
-//				mimeMsgHelperObj.setText(emailMessage1, true);
-//
-//				mimeMsgHelperObj.setSubject(emailSubject);
-//
-//			}
-//		});
-//
-//	}
+ 	private void sendmail(User user) {
+ 		
+		final String emailToRecipient = user.getEmp_email();
+		final String emailSubject = "Acceptation de votre congé";
+
+		final String emailMessage1 = "Mr/mme "+ user.getUsername()+" je vous informe que j’accepte votre demande.";
+
+		mailSenderObj.send(new MimeMessagePreparator() {
+
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+
+				MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+				mimeMsgHelperObj.setTo(emailToRecipient);
+				mimeMsgHelperObj.setText(emailMessage1, true);
+
+				mimeMsgHelperObj.setSubject(emailSubject);
+
+			}
+		});
+
+	}
 
 
 

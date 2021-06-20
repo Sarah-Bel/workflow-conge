@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.flowable.engine.history.HistoricActivityInstance;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
@@ -43,29 +45,18 @@ public class TDemande implements Serializable {
 	
 	 private  String comment;
 	 
-
+	 
 	    @ManyToOne
 		@JsonBackReference
 		@JoinColumn(name = "username", nullable = false)
 		private User user;
+	    
+	    private String process;
 
 
 
-
-	
 		
-	
 
-	// String processId;
-	 
-	 
-	 
-	 
 
-	//public String td (String parentId,ProcessInstance execution) {
-//return processId=execution.getId();
-
-//}	
-	
 
 }

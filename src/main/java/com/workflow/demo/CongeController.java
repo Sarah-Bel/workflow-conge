@@ -104,9 +104,16 @@ public class CongeController {
 
 
     @PostMapping("/manager/approve/tasks/{taskId}/{approved}")
-    public void approveTask(@PathVariable("taskId") String taskId,@PathVariable("approved") Boolean approved){
+    public void approveTask(@PathVariable("taskId") String taskId,@PathVariable("approved") Boolean approved,String username){
     	
     	congerService.approveHoliday(taskId,approved);
+    	if(approved==true)
+    	{
+    	UserMailManager(username);
+    	}
+    	else 
+    		UserMailinvalid(username);
+    	
 
     }
 
@@ -138,7 +145,7 @@ public class CongeController {
     	UserMail(username);
     	}
     	else 
-    		System.out.println("conge KO");
+    		UserMailinvalid(username);
     	
     }
     
@@ -157,7 +164,7 @@ public class CongeController {
     {
     	return congerService.recherche();
     }
-    //************************************MAIL***********************************************
+    //************************************MAIL RH***********************************************
     @Autowired
     UserRepository userrepository;
     
@@ -208,7 +215,75 @@ public class CongeController {
 		});
 
 	}
+ 	
+ 	//********************************************************************************************
+ 	public ResponseEntity<User> UserMailManager(@PathVariable("id") String user_id) {
 
+ 		User user = userrepository.findById(user_id).get();
 
+ 		sendmailManager(user);
+
+ 		return new ResponseEntity<User>(HttpStatus.OK);
+
+ 	}
+ 	
+ 	private void sendmailManager(User user) {
+ 		
+		final String emailToRecipient = user.getEmp_email();
+		final String emailSubject = "Acceptation de votre congé";
+
+		final String emailMessage1 = "Mr/mme "+ user.getUsername()+" je vous informe que j’accepte votre demande je transmets votre demande "
+				+ " a directeur de reoussuer humain pour validé.";
+
+		mailSenderObj.send(new MimeMessagePreparator() {
+
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+
+				MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+				mimeMsgHelperObj.setTo(emailToRecipient);
+				mimeMsgHelperObj.setText(emailMessage1, true);
+
+				mimeMsgHelperObj.setSubject(emailSubject);
+
+			}
+		});
+ 	}
+	//********************************************************************************************
+		public ResponseEntity<User> UserMailinvalid(@PathVariable("id") String user_id) {
+
+	 		User user = userrepository.findById(user_id).get();
+
+	 		sendmailinvalid(user);
+
+	 		return new ResponseEntity<User>(HttpStatus.OK);
+
+	 	}
+	 	
+	 	private void sendmailinvalid(User user) {
+	 		
+			final String emailToRecipient = user.getEmp_email();
+			final String emailSubject = "Acceptation de votre congé";
+
+			final String emailMessage1 = "Mr/mme "+ user.getUsername()+" je vous informe que votre demande a été refusée";
+
+			mailSenderObj.send(new MimeMessagePreparator() {
+
+				@Override
+				public void prepare(MimeMessage mimeMessage) throws Exception {
+
+					MimeMessageHelper mimeMsgHelperObj = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+					mimeMsgHelperObj.setTo(emailToRecipient);
+					mimeMsgHelperObj.setText(emailMessage1, true);
+
+					mimeMsgHelperObj.setSubject(emailSubject);
+
+				}
+			});
+
+		}
+ 	
 
 }

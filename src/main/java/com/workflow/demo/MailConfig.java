@@ -23,12 +23,14 @@ public class MailConfig {
 
 		javaMailSender.setHost(host);
 		javaMailSender.setPort(port);
-		javaMailSender.setUsername("rh.wrkfc@gmail.com");
-		javaMailSender.setPassword("rh%123456");
+		javaMailSender.setUsername("C.servicepersonnel");
+		javaMailSender.setPassword("abc%123456");
 		javaMailSender.setJavaMailProperties(getMailProperties());
 
 		return javaMailSender;
 	}
+	
+	
 
 	private Properties getMailProperties() {
 		Properties properties = new Properties();

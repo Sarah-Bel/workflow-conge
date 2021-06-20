@@ -16,9 +16,6 @@ public interface congeRepository extends JpaRepository<TDemande, Long> {
 
 	 List<TDemande> findByUser(User user);
 
-	String findByUser(String user_id);
 	 
-	// public  List<TDemande> findByUser(String user);
-
 
 }

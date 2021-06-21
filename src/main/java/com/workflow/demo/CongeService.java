@@ -27,6 +27,8 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.StringUtils;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -65,16 +67,19 @@ public class CongeService {
 
 
     //********************************************************** process service methods **********************************************************
-
+  //  MultipartFile file;
     public ProcessInstanceResponse applyHoliday(TDemande tDemande) {
-
     	
+    	//String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+      //  DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes());
+
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("Typeconge", tDemande.getCongeType());
         variables.put("DateDebut", tDemande.getDateDebut());
         variables.put("DateFin", tDemande.getDateFin());
         variables.put("Commentaire", tDemande.getComment());
         variables.put("username", tDemande.getUser().rtid());
+      //  variables.put(fileName, file.getContentType());
         
         
        ProcessInstance processInstance =

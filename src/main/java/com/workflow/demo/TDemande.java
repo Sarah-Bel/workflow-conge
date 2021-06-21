@@ -52,6 +52,10 @@ public class TDemande implements Serializable {
 		private User user;
 	    
 	    private String process;
+	    
+	    private String fileName;
+
+	    private String fileType;
 
 
 

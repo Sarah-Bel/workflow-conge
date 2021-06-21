@@ -103,8 +103,8 @@ public class CongeController {
     }
 
 
-    @PostMapping("/manager/approve/tasks/{taskId}/{approved}")
-    public void approveTask(@PathVariable("taskId") String taskId,@PathVariable("approved") Boolean approved,String username){
+    @PostMapping("/manager/approve/tasks/{taskId}/{approved}/{user}")
+    public void approveTask(@PathVariable("taskId") String taskId,@PathVariable("approved") Boolean approved,@PathVariable("user") String username){
     	
     	congerService.approveHoliday(taskId,approved);
     	if(approved==true)
@@ -113,8 +113,6 @@ public class CongeController {
     	}
     	else 
     		UserMailinvalid(username);
-    	
-
     }
 
     @PostMapping("/user/accept/{taskId}")
@@ -136,8 +134,8 @@ public class CongeController {
     	return "checkProcessHistory";
     }
 
-    @PostMapping("/RH/approve/tasks/{taskId}/{approvedRH}")
-    public void approveTaskRH(@PathVariable("taskId") String taskId,@PathVariable("approvedRH") Boolean approvedRH,String username){
+    @PostMapping("/RH/approve/tasks/{taskId}/{approvedRH}/{user}")
+    public void approveTaskRH(@PathVariable("taskId") String taskId,@PathVariable("approvedRH") Boolean approvedRH,@PathVariable("user") String username){
     	congerService.approveHolidayRH(taskId,approvedRH);
     	
     	if(approvedRH==true)

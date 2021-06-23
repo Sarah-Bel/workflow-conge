@@ -79,12 +79,13 @@ public class CongeService {
         variables.put("DateFin", tDemande.getDateFin());
         variables.put("Commentaire", tDemande.getComment());
         variables.put("username", tDemande.getUser().rtid());
-      //  variables.put(fileName, file.getContentType());
-        
+       
         
        ProcessInstance processInstance =
                runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, variables);
     	congeRepository.save(tDemande);
+    	String Process=processInstance.getId();
+    	 tDemande.setProcess(Process);
         return new ProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
 
     }

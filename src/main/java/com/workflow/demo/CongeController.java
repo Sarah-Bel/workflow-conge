@@ -36,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jayway.jsonpath.internal.Path;
 import com.workflow.dto.ProcessInstanceResponse;
+import com.workflow.dto.Response;
 import com.workflow.dto.TaskDetails;
 
 import java.io.IOException;
@@ -136,11 +137,10 @@ public class CongeController {
 
 
     @GetMapping("/process/{processId}")
-    public String checkState(@PathVariable("processId") String processId){
-    	congerService.checkProcessHistory(processId);
-    	return "checkProcessHistory";
+    public Response checkState(@PathVariable("processId") String processId){
+       return congerService.checkProcessHistory(processId);
     }
-
+    
     @PostMapping("/RH/approve/tasks/{taskId}/{approvedRH}/{user}")
     public void approveTaskRH(@PathVariable("taskId") String taskId,@PathVariable("approvedRH") Boolean approvedRH,@PathVariable("user") String username){
     	congerService.approveHolidayRH(taskId,approvedRH);

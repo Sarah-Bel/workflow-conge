@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import org.apache.commons.mail.Email;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
@@ -41,8 +42,7 @@ public class User {
 //	List<TDemande> TDemandes=new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-	@JsonManagedReference
-
+	@JsonIgnore
 	List<TDemande> tdemande=new ArrayList<>();
 		
 	@Id

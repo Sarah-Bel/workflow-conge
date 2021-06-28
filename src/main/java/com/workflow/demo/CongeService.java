@@ -1,19 +1,17 @@
 package com.workflow.demo;
 
+import java.io.IOException;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.criteria.From;
 import javax.transaction.Transactional;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import net.bytebuddy.asm.Advice.This;
-
 import com.workflow.dto.ProcessInstanceResponse;
 import com.workflow.dto.Response;
 import com.workflow.dto.TaskDetails;
@@ -29,6 +27,7 @@ import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.util.StringUtils;
 
 @Service
@@ -47,12 +46,13 @@ public class CongeService {
     ProcessEngine processEngine;
     RepositoryService repositoryService;
     
-    
-    
+
     
     @Autowired  
 	congeRepository congeRepository ;
 
+    @Autowired  
+	UserRepository userRepository ;
     //********************************************************** deployment service methods **********************************************************
     
     public void deployProcessDefinition() {
@@ -66,13 +66,9 @@ public class CongeService {
 
     }
 
-
     //********************************************************** process service methods **********************************************************
-  //  MultipartFile file;
     public ProcessInstanceResponse applyHoliday(TDemande tDemande) {
     	
-    	//String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-      //  DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes());
 
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("Typeconge", tDemande.getCongeType());
@@ -81,12 +77,12 @@ public class CongeService {
         variables.put("Commentaire", tDemande.getComment());
         variables.put("username", tDemande.getUser().rtid());
        
-        
        ProcessInstance processInstance =
                runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, variables);
-    	congeRepository.save(tDemande);
     	String Process=processInstance.getId();
     	 tDemande.setProcess(Process);
+    	 
+     	congeRepository.save(tDemande);
         return new ProcessInstanceResponse(processInstance.getId(), processInstance.isEnded());
 
     }
@@ -137,9 +133,7 @@ public class CongeService {
 
       return taskDetails ;
       
- 
    }
- 
 
     public Response checkProcessHistory(String processId) {
 
@@ -169,11 +163,12 @@ public class CongeService {
         taskService.complete(taskId, variables);
     }
 
-    public List<TDemande> rechercheConge(String Commentaire,String Typeconge, String empName) {
+    public List<TDemande> rechercheConge(String Commentaire,String Typeconge, String username) {
     	
-    return congeRepository.findByrechercheid(Commentaire,Typeconge,empName);
+    return congeRepository.findByCongeTypeContainingIgnoreCaseOrCommentContainingIgnoreCaseOrUserUsernameContainingIgnoreCase(Commentaire,Typeconge,username);
     
     }
+    
     
     public List<TDemande> recherche() {
     	
@@ -181,9 +176,6 @@ public class CongeService {
         }
 
 
-	
-    
-    
 
 
 }

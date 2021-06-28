@@ -6,9 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import org.flowable.engine.history.HistoricActivityInstance;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -19,14 +21,15 @@ import lombok.NoArgsConstructor;
 
 
 @Entity(name="TDemande")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-
 
 
 public class TDemande implements Serializable {
 	
+	
+
 	/**
 	 * 
 	 */
@@ -47,18 +50,11 @@ public class TDemande implements Serializable {
 	 
 	 
 	    @ManyToOne
-		@JsonBackReference
 		@JoinColumn(name = "username", nullable = false)
 		private User user;
 	    
 	    private String process;
-	    
+
+
 	   
-
-
-
-		
-
-
-
 }

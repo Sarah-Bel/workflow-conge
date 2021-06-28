@@ -1,5 +1,6 @@
 package com.workflow.demo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
@@ -16,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-
-import javax.mail.internet.MimeMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.jayway.jsonpath.internal.Path;
 import com.workflow.dto.ProcessInstanceResponse;
@@ -42,6 +42,14 @@ import com.workflow.dto.TaskDetails;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+
+import org.springframework.stereotype.Controller;
+
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 
 
@@ -96,10 +104,10 @@ public class CongeController {
         }
     }
     //********************************************************** process endpoints **********************************************************
+    
     @PostMapping("/conger/demande")
-    public ProcessInstanceResponse applyHoliday(@RequestBody TDemande tDemande) {
+    public ProcessInstanceResponse applyHoliday(@RequestBody TDemande tDemande)  {
     	//congerService.saveDemande(tDemande);
-    	
         return congerService.applyHoliday(tDemande);
     }
     
@@ -158,10 +166,10 @@ public class CongeController {
     public  List<TDemande> recherche(
     		@PathVariable("valuers") String comment,
     		@PathVariable("valuers") String congeType,
-    		@PathVariable("valuers") String empName
+    		@PathVariable("valuers") String username
     		)
     {
-    	return congerService.rechercheConge(comment,congeType,empName);
+    	return congerService.rechercheConge(comment,congeType,username);
     }
     
     @GetMapping("/Recherche")
@@ -289,7 +297,8 @@ public class CongeController {
 			});
 
 		}
-	 		 	
- 	
 
-}
+	 		 	
+
+	 	
+	 	}

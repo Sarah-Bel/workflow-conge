@@ -297,7 +297,11 @@ public class CongeController {
 			});
 
 		}
-
+//***************************************File***********************************************************
+	 	 @PostMapping("/UploadFile")
+	 	public void uploadFile(@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
+	 	congerService.uploadFile(file);
+	 	}
 	 		 	
 
 	 	

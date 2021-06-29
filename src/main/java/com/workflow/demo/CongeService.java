@@ -1,5 +1,6 @@
 package com.workflow.demo;
 
+import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -174,8 +175,10 @@ public class CongeService {
     	
         return congeRepository.findAll();
         }
+//***********************************FILE************************************************************
 
-
-
+    public void uploadFile(MultipartFile file) throws IllegalStateException, IOException {
+        file.transferTo(new File("C:\\Users\\xps15\\Desktop\\Tele\\"+file.getOriginalFilename()));
+        }
 
 }

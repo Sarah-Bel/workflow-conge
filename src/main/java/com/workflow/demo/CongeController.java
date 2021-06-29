@@ -303,6 +303,11 @@ public class CongeController {
 	 	congerService.uploadFile(file);
 	 	}
 	 		 	
-
+//*******************************************************************************************
+	 	  @GetMapping("/RechercheParUser/{user}")
+	 	    public  List<TDemande> Recherche(@PathVariable("user") String user)
+	 	    {
+	 	    	return congerService.rechercheParUser(user);
+	 	    }
 	 	
 	 	}

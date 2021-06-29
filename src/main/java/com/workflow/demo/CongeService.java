@@ -180,5 +180,10 @@ public class CongeService {
     public void uploadFile(MultipartFile file) throws IllegalStateException, IOException {
         file.transferTo(new File("C:\\Users\\xps15\\Desktop\\Tele\\"+file.getOriginalFilename()));
         }
-
+//************************************************************************************************
+ public List<TDemande> rechercheParUser(String user) {
+    	
+        return congeRepository.findByUserUsername(user);
+        }
+    
 }

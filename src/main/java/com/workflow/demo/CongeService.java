@@ -31,6 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.util.StringUtils;
 
+import org.apache.chemistry.opencmis.client.api.Document;
+
+
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -48,6 +51,8 @@ public class CongeService {
     RepositoryService repositoryService;
     
 
+    @Autowired
+    CmisService cmisService;
     
     @Autowired  
 	congeRepository congeRepository ;
@@ -165,7 +170,7 @@ public class CongeService {
     }
 
     public List<TDemande> rechercheConge(String Commentaire,String Typeconge, String username) {
-    	
+    		
     return congeRepository.findByCongeTypeContainingIgnoreCaseOrCommentContainingIgnoreCaseOrUserUsernameContainingIgnoreCase(Commentaire,Typeconge,username);
     
     }
@@ -178,7 +183,12 @@ public class CongeService {
 //***********************************FILE************************************************************
 
     public void uploadFile(MultipartFile file) throws IllegalStateException, IOException {
-        file.transferTo(new File("C:\\Users\\xps15\\Desktop\\Tele\\"+file.getOriginalFilename()));
+    	
+    	file.transferTo(new File("C:\\Users\\xps15\\Desktop\\Tele\\"+file.getOriginalFilename()));
+    	
+    	Document docA = cmisService.createDocument(cmisService.getRootFolder(), file.getOriginalFilename());
+    	
+        
         }
 //************************************************************************************************
  public List<TDemande> rechercheParUser(String user) {

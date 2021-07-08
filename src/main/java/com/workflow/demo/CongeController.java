@@ -208,9 +208,9 @@ public class CongeController {
  	private void sendmail(User user) {
  		
 		final String emailToRecipient = user.getEmp_email();
-		final String emailSubject = "Acceptation de votre congé";
+		final String emailSubject = "Réponse du demande de congé[RH]";
 
-		final String emailMessage1 = "Mr/mme "+ user.getUsername()+" je vous informe que j’accepte votre demande.";
+		final String emailMessage1 = "Mr/mme "+ user.getUsername()+" Votre demande a été accéptée.";
 
 		mailSenderObj.send(new MimeMessagePreparator() {
 
@@ -243,10 +243,10 @@ public class CongeController {
  	private void sendmailManager(User user) {
  		
 		final String emailToRecipient = user.getEmp_email();
-		final String emailSubject = "Acceptation de votre congé";
+		final String emailSubject = "Réponse du demande de congé[Manager]";
 
-		final String emailMessage1 = "Mr/mme "+ user.getUsername()+" je vous informe que j’accepte votre demande je transmets votre demande "
-				+ " a directeur de reoussuer humain pour validé.";
+		final String emailMessage1 = "Mr/mme "+ user.getUsername()+" je vous informe que votre demande de congé a été aprouvée et transmets vers "
+				+ "resource humain pour la valider .";
 
 		mailSenderObj.send(new MimeMessagePreparator() {
 
@@ -277,9 +277,9 @@ public class CongeController {
 	 	private void sendmailinvalid(User user) {
 	 		
 			final String emailToRecipient = user.getEmp_email();
-			final String emailSubject = "Acceptation de votre congé";
+			final String emailSubject = "Réponse du demande de congé";
 
-			final String emailMessage1 = "Mr/mme "+ user.getUsername()+" je vous informe que votre demande a été refusée";
+			final String emailMessage1 = "Mr/mme "+ user.getUsername()+" je vous informe que votre demande de congé a été refusée";
 
 			mailSenderObj.send(new MimeMessagePreparator() {
 
